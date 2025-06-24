@@ -11,20 +11,20 @@ void build(int node, int start, int end, vector<int> &v, vector<int> &tree)
     int mid = (start + end) / 2;
     build(2 * node + 1, start, mid, v, tree);
     build(2 * node + 2, mid + 1, end, v, tree);
-    tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+    tree[node] = tree[2 * node + 1] * tree[2 * node + 2];
 }
 
-int getsum(int node, int l, int r, int start, int end, vector<int> &tree)
+int getproduct(int node, int l, int r, int start, int end, vector<int> &tree)
 {
     if (end < l || start > r)
-        return 0;
+        return 1;
     if (start >= l && end <= r)
         return tree[node];
 
     int mid = (start + end) / 2;
-    int left = getsum(2 * node + 1, l, r, start, mid, tree);
-    int right = getsum(2 * node + 2, l, r, mid + 1, end, tree);
-    return left + right;
+    int left = getproduct(2 * node + 1, l, r, start, mid, tree);
+    int right = getproduct(2 * node + 2, l, r, mid + 1, end, tree);
+    return left * right;
 }
 
 void update(int val, int idx, int node, int start, int end, vector<int> &v, vector<int> &tree)
@@ -42,7 +42,7 @@ void update(int val, int idx, int node, int start, int end, vector<int> &v, vect
     else
         update(val, idx, 2 * node + 2, mid + 1, end, v, tree);
 
-    tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+    tree[node] = tree[2 * node + 1] * tree[2 * node + 2];
 }
 
 void print_tree(vector<int> &tree, int n)
@@ -81,7 +81,7 @@ int main()
     do
     {
         cout << "\nMenu:\n";
-        cout << "1. Query sum for multiple ranges\n";
+        cout << "1. Query product for multiple ranges\n";
         cout << "2. Update value at index\n";
         cout << "3. Print segment tree\n";
         cout << "4. Exit\n";
@@ -104,7 +104,7 @@ int main()
                 if (l < 0 || r >= n || l > r)
                     cout << "Invalid range!\n";
                 else
-                    cout << "Sum of range [" << l << "," << r << "] = " << getsum(0, l, r, 0, n - 1, tree) << endl;
+                    cout << "P  `roduct of range [" << l << "," << r << "] = " << getproduct(0, l, r, 0, n - 1, tree) << endl;
             }
             break;
         }
